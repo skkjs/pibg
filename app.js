@@ -1,5 +1,5 @@
 const CONFIG = {
-  API_URL: "https://summer-fire-a018.g-09340564.workers.dev",
+  API_URL: "https://pibg-skkjs-api.sekolah-2035-cm1.workers.dev",
   YEARS: [],
   CATEGORIES: ["Surat Keluar","Surat Masuk","Minit Mesyuarat","Program PIBG","Sumbangan PIBG","Galeri"]
 };
