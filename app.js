@@ -1,5 +1,5 @@
 const CONFIG = {
-  API_URL: "API_URL: "https://summer-fire-a018.g-09340564.workers.dev",
+  API_URL: "https://summer-fire-a018.g-09340564.workers.dev",
   YEARS: [],
   CATEGORIES: ["Surat Keluar","Surat Masuk","Minit Mesyuarat","Program PIBG","Sumbangan PIBG","Galeri"]
 };
