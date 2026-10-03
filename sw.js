@@ -1,10 +1,67 @@
-const CACHE="pibg-skkjs-v4-user-management-v7";
-const ASSETS=["./","./index.html","./styles.css","./app.js","./manifest.webmanifest","./assets/logo.png","./assets/icon-192.png","./assets/icon-512.png"];
-self.addEventListener("install",e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS)).then(()=>self.skipWaiting())));
-self.addEventListener("activate",e=>e.waitUntil(self.clients.claim()));
-self.addEventListener("fetch",e=>{
-  if(e.request.method!=="GET") return;
-  e.respondWith(caches.match(e.request).then(cached=>cached||fetch(e.request).then(r=>{
-    const copy=r.clone();caches.open(CACHE).then(c=>c.put(e.request,copy));return r;
-  }).catch(()=>cached)));
+const CACHE = "pibg-skkjs-v5";
+
+const ASSETS = [
+  "./",
+  "./index.html",
+  "./styles.css",
+  "./app.js",
+  "./manifest.webmanifest",
+  "./assets/logo.png",
+  "./assets/icon-192.png",
+  "./assets/icon-512.png"
+];
+
+self.addEventListener("install", event => {
+  event.waitUntil(
+    caches.open(CACHE)
+      .then(cache => cache.addAll(ASSETS))
+      .then(() => self.skipWaiting())
+  );
+});
+
+self.addEventListener("activate", event => {
+  event.waitUntil(
+    caches.keys()
+      .then(keys =>
+        Promise.all(
+          keys
+            .filter(key => key !== CACHE)
+            .map(key => caches.delete(key))
+        )
+      )
+      .then(() => self.clients.claim())
+  );
+});
+
+self.addEventListener("fetch", event => {
+  const request = event.request;
+
+  if (request.method !== "GET") {
+    return;
+  }
+
+  const url = new URL(request.url);
+
+  // Jangan cache Cloudflare Worker / API atau domain luar
+  if (url.origin !== self.location.origin) {
+    return;
+  }
+
+  event.respondWith(
+    fetch(request)
+      .then(response => {
+        if (response.ok) {
+          const copy = response.clone();
+
+          caches.open(CACHE).then(cache => {
+            cache.put(request, copy);
+          });
+        }
+
+        return response;
+      })
+      .catch(() => {
+        return caches.match(request);
+      })
+  );
 });
