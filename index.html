@@ -146,7 +146,7 @@
               <label>Format<input id="docFormat" value="PDF"></label>
               <label>Link Google Drive / Dokumen<input id="docLink" type="url" required></label>
               <label>Kata Kunci<input id="docKeywords" placeholder="mesyuarat, surat, PIBG"></label>
-              <div class="admin-actions"><button class="gold-btn" type="submit">SIMPAN DOKUMEN</button><button class="ghost-btn" type="button" id="resetDoc">Bersihkan</button></div>
+              <div class="admin-actions"><button class="gold-btn" type="submit">SIMPAN DOKUMEN</button><button class="ghost-btn" type="button" onclick="syncSheet()">🔄 SYNC GOOGLE SHEET</button><button class="ghost-btn" type="button" id="resetDoc">Bersihkan</button></div>
               <div id="docMsg" class="form-msg"></div>
             </form>
           </div>
