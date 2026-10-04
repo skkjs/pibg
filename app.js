@@ -209,6 +209,41 @@ async function saveDoc(e){
   const p={action:$("docId").value?"updateDocument":"addDocument",token:state.token,id:$("docId").value,year:$("docYear").value,category:$("docCategory").value,title:$("docTitle").value,date:$("docDate").value,ref:$("docRef").value,format:$("docFormat").value,link:$("docLink").value,keywords:$("docKeywords").value};
   try{const data=await jsonp(p);if(!data.ok)throw new Error(data.message||"Gagal menyimpan.");$("docMsg").textContent="Berjaya disimpan.";resetDocForm();await load();await loadAdminDocs()}catch(e){$("docMsg").textContent=e.message}
 }
+
+async function syncSheet(){
+  if(!confirm("Sync data dari Google Sheet sekarang?")) return;
+
+  $("docMsg").textContent="Menyegerakkan Google Sheet...";
+
+  try{
+    const data=await jsonp({
+      action:"syncSheet",
+      token:state.token
+    });
+
+    if(!data.ok){
+      throw new Error(data.message||"Sync gagal.");
+    }
+
+    $("docMsg").textContent =
+      `Sync berjaya. Tambah: ${data.added}, Kemaskini: ${data.updated}, Skip: ${data.skipped}`;
+
+    alert(
+      "SYNC GOOGLE SHEET BERJAYA\n\n"+
+      "Dokumen baharu: "+data.added+"\n"+
+      "Dokumen dikemaskini: "+data.updated+"\n"+
+      "Dokumen diabaikan: "+data.skipped
+    );
+
+    // Refresh seluruh website supaya data terbaru terus dipaparkan
+    location.reload();
+
+  }catch(e){
+    $("docMsg").textContent="Sync gagal: "+e.message;
+    alert("Sync Google Sheet gagal:\n\n"+e.message);
+  }
+}
+
 async function deleteDoc(id){if(!confirm("Nyahaktifkan dokumen ini?"))return;try{const data=await jsonp({action:"deleteDocument",id,token:state.token});if(!data.ok)throw new Error(data.message||"Gagal.");await load();await loadAdminDocs()}catch(e){alert(e.message)}}
 async function loadAdminUsers(){
   const box=$("adminUserList");box.innerHTML="<div class='admin-loading'>Memuatkan...</div>";
